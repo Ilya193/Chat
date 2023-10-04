@@ -7,4 +7,5 @@ interface AuthRepository {
         get() = "Something went wrong"
 
     suspend fun signUp(nickname: String, email: String, password: String): ResultApi<*>
+    suspend fun signIn(email: String, password: String): ResultApi<*>
 }

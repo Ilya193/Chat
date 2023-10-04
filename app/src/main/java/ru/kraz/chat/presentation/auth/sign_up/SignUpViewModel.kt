@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.kraz.chat.domain.EventWrapper
 import ru.kraz.chat.domain.ResultApi
-import ru.kraz.chat.domain.auth.SignUpUseCase
+import ru.kraz.chat.domain.auth.sign_up.SignUpUseCase
 import ru.kraz.chat.presentation.auth.AuthState
 
 class SignUpViewModel(

@@ -19,4 +19,9 @@ class CloudDataSourceImpl(
             .await()
         return ResultApi.Success(Unit)
     }
+
+    override suspend fun signIn(email: String, password: String): ResultApi<*> {
+        auth.signInWithEmailAndPassword(email, password).await()
+        return ResultApi.Success(Unit)
+    }
 }

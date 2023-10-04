@@ -8,7 +8,7 @@ import ru.kraz.chat.data.auth.AuthRepositoryImpl
 import ru.kraz.chat.data.auth.CloudDataSource
 import ru.kraz.chat.data.auth.CloudDataSourceImpl
 import ru.kraz.chat.domain.auth.AuthRepository
-import ru.kraz.chat.domain.auth.SignUpUseCase
+import ru.kraz.chat.domain.auth.sign_up.SignUpUseCase
 import ru.kraz.chat.presentation.auth.sign_up.SignUpViewModel
 
 val appModule = module {

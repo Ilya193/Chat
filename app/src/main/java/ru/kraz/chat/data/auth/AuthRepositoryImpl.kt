@@ -13,6 +13,12 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun signIn(email: String, password: String): ResultApi<*> {
+        return handleExceptions {
+            dataSource.signIn(email, password)
+        }
+    }
+
     private suspend fun <T> handleExceptions(block: suspend () -> ResultApi<T>): ResultApi<T> {
         return try {
             block()

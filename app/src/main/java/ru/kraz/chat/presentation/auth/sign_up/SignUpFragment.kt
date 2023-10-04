@@ -10,6 +10,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.kraz.chat.databinding.FragmentSignUpBinding
 import ru.kraz.chat.presentation.BaseFragment
 import ru.kraz.chat.presentation.auth.AuthState
+import ru.kraz.chat.presentation.chat.ChatFragment
 
 class SignUpFragment : BaseFragment() {
     private var _binding: FragmentSignUpBinding? = null
@@ -55,15 +56,16 @@ class SignUpFragment : BaseFragment() {
         }
     }
 
-    private fun renderSuccess() {
+    override fun renderSuccess() {
         binding.loading.visibility = View.GONE
+        launchFragment(ChatFragment.newInstance())
     }
 
-    private fun renderLoading() {
+    override fun renderLoading() {
         binding.loading.visibility = View.VISIBLE
     }
 
-    private fun renderError(state: AuthState.Error) {
+    override fun renderError(state: AuthState.Error) {
         binding.loading.visibility = View.GONE
         Snackbar.make(binding.root, state.msg, Snackbar.LENGTH_SHORT).show()
     }

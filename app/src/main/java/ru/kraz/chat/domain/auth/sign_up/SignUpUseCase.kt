@@ -1,6 +1,7 @@
-package ru.kraz.chat.domain.auth
+package ru.kraz.chat.domain.auth.sign_up
 
 import ru.kraz.chat.domain.ResultApi
+import ru.kraz.chat.domain.auth.AuthRepository
 
 class SignUpUseCase(
     private val repository: AuthRepository
