@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "90990126977",
+    "project_id": "chat-25426",
+    "storage_bucket": "chat-25426.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90990126977:android:f6fb66421356b9bc7daa80",
+        "android_client_info": {
+          "package_name": "ru.kraz.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuphFgWtlkQaoqC7DWwz2sUEAvZgsH2zc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
