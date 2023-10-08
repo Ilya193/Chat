@@ -1,11 +1,10 @@
 package ru.kraz.chat.presentation.auth.sign_in
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -16,6 +15,7 @@ import ru.kraz.chat.presentation.auth.AuthState
 import ru.kraz.chat.presentation.chat.ChatFragment
 import ru.kraz.chat.presentation.auth.sign_up.SignUpFragment
 import ru.kraz.chat.presentation.auth.sign_up.SignUpViewModel
+import ru.kraz.chat.presentation.chat.MessageUi
 
 class SignInFragment : BaseFragment() {
     private var _binding: FragmentSignInBinding? = null
@@ -34,12 +34,18 @@ class SignInFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setClickListeners()
-        settingViewModel()
 
-        FirebaseAuth.getInstance().currentUser?.let {
-            Log.d("attadag", "let")
-            launchFragment(ChatFragment.newInstance())
+        val user = FirebaseAuth.getInstance().currentUser
+
+        if (user != null) {
+            val nickname =
+                context?.getSharedPreferences("settings", Context.MODE_PRIVATE)?.getString("nickname", "")
+                    ?: ""
+            launchFragment(ChatFragment.newInstance(nickname))
+        }
+        else {
+            setClickListeners()
+            settingViewModel()
         }
     }
 
@@ -52,7 +58,7 @@ class SignInFragment : BaseFragment() {
         }
 
         binding.btnSignUp.setOnClickListener {
-            launchFragment(SignUpFragment.newInstance())
+            launchFragment(SignUpFragment.newInstance(), true)
         }
     }
 
@@ -60,7 +66,7 @@ class SignInFragment : BaseFragment() {
         signInViewModel.signInResult.observe(viewLifecycleOwner) {
             it.getContentOrNot {  state ->
                 when (state) {
-                    is AuthState.Success -> renderSuccess()
+                    is AuthState.Success -> renderSuccess(state.nickname)
                     is AuthState.Loading -> renderLoading()
                     is AuthState.Error -> renderError(state)
                 }
@@ -68,16 +74,16 @@ class SignInFragment : BaseFragment() {
         }
     }
 
-    override fun renderSuccess() {
+    private fun renderSuccess(nickname: String) {
         binding.loading.visibility = View.GONE
-        launchFragment(ChatFragment.newInstance())
+        launchFragment(ChatFragment.newInstance(nickname))
     }
 
-    override fun renderLoading() {
+    private fun renderLoading() {
         binding.loading.visibility = View.VISIBLE
     }
 
-    override fun renderError(state: AuthState.Error) {
+    private fun renderError(state: AuthState.Error) {
         binding.loading.visibility = View.GONE
         Snackbar.make(binding.root, state.msg, Snackbar.LENGTH_SHORT).show()
     }

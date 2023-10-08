@@ -7,4 +7,7 @@
     <string name="sign_up">Зарегистрироваться</string>
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
+    <string name="message">Сообщение</string>
+    <string name="retry">Попробовать снова</string>
+    <string name="notifications_not_arrive">Уведомления не будут приходить</string>
 </resources>

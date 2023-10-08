@@ -5,12 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.kraz.chat.databinding.FragmentSignUpBinding
 import ru.kraz.chat.presentation.BaseFragment
 import ru.kraz.chat.presentation.auth.AuthState
 import ru.kraz.chat.presentation.chat.ChatFragment
+import ru.kraz.chat.presentation.chat.MessageUi
 
 class SignUpFragment : BaseFragment() {
     private var _binding: FragmentSignUpBinding? = null
@@ -48,7 +51,7 @@ class SignUpFragment : BaseFragment() {
         signUpViewModel.signUpResult.observe(viewLifecycleOwner) {
             it.getContentOrNot { state ->
                 when (state) {
-                    is AuthState.Success -> renderSuccess()
+                    is AuthState.Success -> renderSuccess(state.nickname)
                     is AuthState.Loading -> renderLoading()
                     is AuthState.Error -> renderError(state)
                 }
@@ -56,16 +59,17 @@ class SignUpFragment : BaseFragment() {
         }
     }
 
-    override fun renderSuccess() {
+    private fun renderSuccess(nickname: String) {
         binding.loading.visibility = View.GONE
-        launchFragment(ChatFragment.newInstance())
+        setFragmentResult("notifications", bundleOf())
+        launchFragment(ChatFragment.newInstance(nickname))
     }
 
-    override fun renderLoading() {
+    private fun renderLoading() {
         binding.loading.visibility = View.VISIBLE
     }
 
-    override fun renderError(state: AuthState.Error) {
+    private fun renderError(state: AuthState.Error) {
         binding.loading.visibility = View.GONE
         Snackbar.make(binding.root, state.msg, Snackbar.LENGTH_SHORT).show()
     }

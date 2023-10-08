@@ -21,7 +21,7 @@ class SignUpViewModel(
     fun signUp(nickname: String, email: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
         _signUpResult.postValue(EventWrapper.Single(AuthState.Loading))
         when (val result = signUpUseCase(nickname, email, password)) {
-            is ResultApi.Success -> _signUpResult.postValue(EventWrapper.Single(AuthState.Success))
+            is ResultApi.Success -> _signUpResult.postValue(EventWrapper.Single(AuthState.Success(result.data as String)))
             is ResultApi.Error -> _signUpResult.postValue(EventWrapper.Single(AuthState.Error(result.e)))
         }
     }

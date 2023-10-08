@@ -21,7 +21,7 @@ class SignInViewModel(
     fun signIn(email: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
         _signInResult.postValue(EventWrapper.Single(AuthState.Loading))
         when (val result = signInUseCase(email, password)) {
-            is ResultApi.Success -> _signInResult.postValue(EventWrapper.Single(AuthState.Success))
+            is ResultApi.Success -> _signInResult.postValue(EventWrapper.Single(AuthState.Success(result.data as String)))
             is ResultApi.Error -> _signInResult.postValue(EventWrapper.Single(AuthState.Error(result.e)))
         }
     }

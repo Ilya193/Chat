@@ -4,7 +4,7 @@ import ru.kraz.chat.domain.ResultApi
 import ru.kraz.chat.domain.auth.AuthRepository
 
 class AuthRepositoryImpl(
-    private val dataSource: CloudDataSource,
+    private val dataSource: AuthCloudDataSource,
 ) : AuthRepository {
 
     override suspend fun signUp(nickname: String, email: String, password: String): ResultApi<*> {
