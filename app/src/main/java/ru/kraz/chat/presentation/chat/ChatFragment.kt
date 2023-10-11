@@ -1,7 +1,10 @@
 package ru.kraz.chat.presentation.chat
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -10,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.viewbinding.ViewBinding
 import coil.load
 import com.elveum.elementadapter.SimpleBindingAdapter
 import com.elveum.elementadapter.adapter
@@ -87,36 +92,16 @@ class ChatFragment : BaseFragment() {
 
     override fun settingViewModel() {
         chatViewModel.fetchMessage()
-        chatViewModel.chatResult.observe(viewLifecycleOwner) {
-            when (it) {
-                is ChatState.Success -> renderSuccess(it)
-                is ChatState.Loading -> renderLoading()
-                is ChatState.Error -> renderError(it)
+        chatViewModel.chatResult.observe(viewLifecycleOwner) { state ->
+            binding.errorContainer.visibility = if (state is ChatState.Error) View.VISIBLE else View.GONE
+            binding.tvError.text = if (state is ChatState.Error) state.msg else ""
+            binding.loading.visibility = if (state is ChatState.Loading) View.VISIBLE else View.GONE
+            binding.rvMessages.visibility = if (state is ChatState.Success) View.VISIBLE else View.GONE
+            if (state is ChatState.Success) {
+                adapter.submitList(state.data)
+                binding.rvMessages.smoothScrollToPosition(0)
             }
         }
-    }
-
-    private fun renderSuccess(state: ChatState.Success) {
-        binding.errorContainer.visibility = View.GONE
-        binding.loading.visibility = View.GONE
-        binding.rvMessages.visibility = View.VISIBLE
-        adapter.submitList(state.data)
-        binding.rvMessages.postDelayed({
-            binding.rvMessages.scrollToPosition(0)
-        }, 10)
-    }
-
-    private fun renderError(state: ChatState.Error) {
-        binding.loading.visibility = View.GONE
-        binding.rvMessages.visibility = View.GONE
-        binding.errorContainer.visibility = View.VISIBLE
-        binding.tvError.text = state.msg
-    }
-
-    private fun renderLoading() {
-        binding.loading.visibility = View.VISIBLE
-        binding.rvMessages.visibility = View.GONE
-        binding.errorContainer.visibility = View.GONE
     }
 
     override fun setClickListeners() {
@@ -151,6 +136,20 @@ class ChatFragment : BaseFragment() {
         binding.changeImage.visibility = View.GONE
         filename = ""
         imgUri = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(Intent("notification").apply {
+            putExtra("show", false)
+        })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(Intent("notification").apply {
+            putExtra("show", true)
+        })
     }
 
     private var filename = ""
