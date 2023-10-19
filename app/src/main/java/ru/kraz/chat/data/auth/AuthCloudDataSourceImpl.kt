@@ -19,12 +19,12 @@ class AuthCloudDataSourceImpl(
         auth.createUserWithEmailAndPassword(email, password).await()
         val id = auth.currentUser?.uid ?: UUID.randomUUID().toString()
         firebase.collection("users")
-            .document(auth.currentUser?.uid!!)
+            .document(id)
             .set(UserCloud(id, nickname))
             .await()
         context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit()
             .putString("nickname", nickname).apply()
-        messaging.subscribeToTopic("messages").await()
+        //messaging.subscribeToTopic("messages").await()
         return ResultApi.Success(nickname)
     }
 
